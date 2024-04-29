@@ -22,4 +22,5 @@ For an 11h run, it took roughly 8s to fetch the data, <1s to analyze it.
 * poetry install
 ### Typical execution
 Assumed the env variables `DCS_BRIDGE` and `OMS_BRIDGE` are properly set:
-`python <run_number> <output_folder_path>
+
+`python <run_number> <output_folder_path> --thr <equivalent divider threshold>`
