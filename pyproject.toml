@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gemdcs-querythroughbridge"
+version = "0.1.0"
+description = ""
+authors = ["fraivone <francesco.ivone@cern.ch>"]
+readme = "README.md"
+packages = [{ include = "*.py", from = "./src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+pytz = "^2023.3"
+numba = "^0.57.1"
+pandas = "^2.0.3"
+runregistry = "^0.2.8"
+pathlib = "^1.0.1"
+urllib3 = "1.26.6"
+scipy = "1.10.1"
+tqdm = "^4.66.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
