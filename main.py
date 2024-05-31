@@ -31,8 +31,8 @@ if __name__ == '__main__':
     threshold = args.ieq_threshold
     
     OMS = OMSrunInfo(targetRun)
-    Run_Start_Timestamp =  int(dt2ts(OMS.getRunStartDatetime())) # seconds
-    Run_Stop_Timestamp = int(dt2ts(OMS.getRunStopDatetime()))    # seconds
+    Run_Start_Timestamp =  int(OMS.getRunStartDatetime()) # seconds
+    Run_Stop_Timestamp = int(OMS.getRunStopDatetime())    # seconds
 
     DCS = DCSchamberHVInfo(All_Units, Run_Start_Timestamp, Run_Stop_Timestamp)
     DCS.fetchData()

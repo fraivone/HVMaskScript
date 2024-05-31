@@ -56,13 +56,13 @@ class OMSrunInfo:
         parses the OMS response to get the start time field 
         and converts it into a datetetime object
         """
-        return datetime.datetime.strptime(self.data['data']['start_time'],'%Y-%m-%dT%H:%M:%SZ')
+        return datetime.datetime.strptime(self.data['data']['start_time'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc).timestamp()
     def getRunStopDatetime(self):
         """ 
         parses the OMS response to get the end time field 
         and converts it into a datetetime object
         """
-        return datetime.datetime.strptime(self.data['data']['end_time'],'%Y-%m-%dT%H:%M:%SZ')
+        return datetime.datetime.strptime(self.data['data']['end_time'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc).timestamp()
     def getRunSeconds_per_Lumisection(self):
         """
         used only for debugging
