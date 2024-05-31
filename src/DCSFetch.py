@@ -4,7 +4,7 @@ import numpy as np
 import time
 from urllib import request
 import json
-
+from analysis import SECONDS_PER_LUMISECTION
 
 class DCSchamberHVInfo:
     """
@@ -28,39 +28,30 @@ class DCSchamberHVInfo:
     ]
     """
     
-    def __init__(self, allChambers:list, startTimestamp:int, stopTimestamp:int):
+    def __init__(self, startTimestamp:int, stopTimestamp:int):
         self.DCS_URL = os.environ['DCS_BRIDGE']
-        self.UNITS_PER_BATCH = 40
-        self.SECONDS_PER_LUMISECTION = 23.3
         self.ELECTRODE_NAMES = {"DRIFT","G1TOP","G2TOP","G3TOP","G1BOT","G2BOT","G3BOT"}
 
-        self.startTimestamp = startTimestamp
-        self.stopTimestamp = stopTimestamp #s
-        self.allChambers = allChambers #s
-        self.HVDataFrame : pd.DataFrame
-        self.batches = self.generate_batches(self.allChambers, self.UNITS_PER_BATCH)
+        self.startTimestamp = startTimestamp #s
+        self.stopTimestamp = stopTimestamp   #s
 
-    def generate_batches(self,lst, n):
-        return [lst[i:i+n] for i in range(0, len(lst), n)]
-    
-    def fetchData(self):
-        DataFrames = []
-        sec_per_ls = self.SECONDS_PER_LUMISECTION
-        for idx,ch_batch in enumerate(self.batches):
-            print(f"Fetching HV data for batch {idx+1}/{len(self.batches)}", end="... ")
-            t0 = time.time()
-            query = self._generateQuery(ch_batch)
-            data = self._getDCSResponse(query)
-            temp_df = self._Response2DataFrame(data)
-            DataFrames.append(temp_df)
-            print(f" done in {round(time.time()-t0,2)}s")
-
-        chamberHVDataFrame = pd.concat(DataFrames)
+    def fetchData(self, listOfChambers):
+        """
+        This method is not used anymore in the main exec, but
+        it might still be useful for other applications.
+        Fetch HV data for the parsed chambers, add lumisection
+        and reshape it conveniently.
+        """
+        sec_per_ls = SECONDS_PER_LUMISECTION
+        t0 = time.time()
+        query = self._generateQuery(listOfChambers)
+        data = self._getDCSResponse(query)
+        temp_df = self._Response2DataFrame(data)
+        print(f" done in {round(time.time()-t0,2)}s")
 
         # the next line does lumisection = (time - timeRunStart)/secs_per_lumi (modulo conversions)
-        chamberHVDataFrame['RunLumisection'] = ((chamberHVDataFrame['Timestamp']/1000 - self.startTimestamp)//sec_per_ls).astype('int32') 
-        self.HVDataFrame = chamberHVDataFrame
-
+        temp_df['RunLumisection'] = ((temp_df['Timestamp']/1000 - self.startTimestamp)//sec_per_ls).astype('int32') 
+        return temp_df
 
 
     def _generateQuery(self, chamberIDsList):
