@@ -26,10 +26,11 @@ if __name__ == '__main__':
     Run_Start_Timestamp =  int(OMS.getRunStartDatetime()) # seconds
     Run_Stop_Timestamp = int(OMS.getRunStopDatetime())    # seconds
     DCS = DCSchamberHVInfo(Run_Start_Timestamp, Run_Stop_Timestamp)
+    print(Run_Start_Timestamp,Run_Stop_Timestamp)
 
     badLSDict = {}
     summary = []
-    for idx,ch in tqdm(enumerate(All_Units), miniters=1, desc="Marking lumisection with bad HV for the GEM HV units in target_chambers"):
+    for idx,ch in tqdm(enumerate(All_Units), miniters=1, desc="Marking bad HV Lumisections for the GEM HV units in target_chambers.py"):
         query = DCS._generateQuery([ch])
         data = DCS._getDCSResponse(query)
         ch_df = homogenizeDataPerLumisection(data, DCS.startTimestamp, DCS.stopTimestamp)
